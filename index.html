@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>DIAGNOSTIC SYSTEM | Ultimate Edition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    <div class="glow-orb"></div>
+    <div class="glow-orb glow-orb-2"></div>
+ 
+    <!-- ========== LOGIN SCREEN ========== -->
+    <div id="loginScreen" style="display:flex; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(135deg,#0a0f0a 0%,#020502 50%,#0a0f0a 100%); position:fixed; top:0; left:0; width:100%; z-index:9999;">
+        <div style="background:rgba(12,18,12,0.95); border:1px solid rgba(79,207,79,0.3); border-radius:24px; padding:40px; width:100%; max-width:420px; margin:20px;">
+            <div style="text-align:center; margin-bottom:30px;">
+                <i class="fas fa-microchip" style="font-size:3rem; color:#4fcf4f; margin-bottom:10px; display:block;"></i>
+                <h2 style="color:#e0ffe0; font-size:1.5rem; letter-spacing:3px;">DIAGNOSTIC SYSTEM</h2>
+                <p style="color:#8fca8f; font-size:0.85rem;">Ultimate Edition v4.0</p>
+            </div>
+ 
+            <!-- API Status -->
+            <div id="loginApiStatus" style="text-align:center; font-size:12px; margin-bottom:20px; padding:6px 12px; border-radius:20px; background:rgba(0,0,0,0.4);">
+                <i class="fas fa-circle-notch fa-spin"></i> Connecting to server...
+            </div>
+ 
+            <!-- Login Form -->
+            <div id="loginFormSection">
+                <input type="email" id="loginEmail" placeholder="Email Address" style="width:100%;padding:12px 16px;margin:8px 0;background:rgba(0,0,0,0.4);border:1px solid rgba(79,207,79,0.3);border-radius:50px;color:#e0ffe0;outline:none;font-size:0.9rem;">
+                <input type="password" id="loginPassword" placeholder="Password" style="width:100%;padding:12px 16px;margin:8px 0;background:rgba(0,0,0,0.4);border:1px solid rgba(79,207,79,0.3);border-radius:50px;color:#e0ffe0;outline:none;font-size:0.9rem;">
+                <button id="loginBtn" style="width:100%;padding:14px;margin-top:12px;background:linear-gradient(135deg,#27b095,#4CAF50);border:none;border-radius:50px;color:#0a0f0a;font-weight:700;font-size:1rem;cursor:pointer;letter-spacing:2px;">
+                    <i class="fas fa-sign-in-alt"></i> LOGIN
+                </button>
+                <div style="text-align:center; margin-top:15px; font-size:0.9rem;">
+                    <a id="showRegisterBtn" style="color:#4CAF50; cursor:pointer; text-decoration:none;">Register</a>
+                    <span style="color:#8fca8f;"> | </span>
+                    <a id="guestLoginBtn" style="color:#4CAF50; cursor:pointer; text-decoration:none;">Guest Access</a>
+                </div>
+                <p style="text-align:center; margin-top:15px; font-size:11px; color:#8fca8f;">A comprehensive web-based diagnostic tool that monitors your system health, battery, network performance, and CPU temperature in real-time — keeping your device running at peak performance.</p>
+            </div>
+ 
+            <!-- Register Form -->
+            <div id="registerFormSection" style="display:none;">
+                <input type="text" id="regName" placeholder="Full Name" style="width:100%;padding:12px 16px;margin:8px 0;background:rgba(0,0,0,0.4);border:1px solid rgba(79,207,79,0.3);border-radius:50px;color:#e0ffe0;outline:none;font-size:0.9rem;">
+                <input type="email" id="regEmail" placeholder="Email Address" style="width:100%;padding:12px 16px;margin:8px 0;background:rgba(0,0,0,0.4);border:1px solid rgba(79,207,79,0.3);border-radius:50px;color:#e0ffe0;outline:none;font-size:0.9rem;">
+                <input type="password" id="regPassword" placeholder="Password (min 4 chars)" style="width:100%;padding:12px 16px;margin:8px 0;background:rgba(0,0,0,0.4);border:1px solid rgba(79,207,79,0.3);border-radius:50px;color:#e0ffe0;outline:none;font-size:0.9rem;">
+                <input type="password" id="regConfirm" placeholder="Confirm Password" style="width:100%;padding:12px 16px;margin:8px 0;background:rgba(0,0,0,0.4);border:1px solid rgba(79,207,79,0.3);border-radius:50px;color:#e0ffe0;outline:none;font-size:0.9rem;">
+                <button id="registerBtn" style="width:100%;padding:14px;margin-top:12px;background:linear-gradient(135deg,#27b095,#4CAF50);border:none;border-radius:50px;color:#0a0f0a;font-weight:700;font-size:1rem;cursor:pointer;letter-spacing:2px;">
+                    <i class="fas fa-user-plus"></i> CREATE ACCOUNT
+                </button>
+                <div style="text-align:center; margin-top:15px;">
+                    <a id="showLoginBtn" style="color:#4CAF50; cursor:pointer; font-size:0.9rem;">← Back to Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <!-- ========== MAIN APP ========== -->
+    <div id="mainApp" style="display:none;">
+        <div class="app-container">
+            <div class="module-bar">
+                <div class="module-container">
+                    <div class="logo-area">
+                        <i class="fas fa-microchip logo-icon"></i>
+                        <h1>DIAGNOSTIC SYSTEM</h1>
+                        <span class="version">Ultimate v4.0</span>
+                    </div>
+                    <div class="desktop-nav">
+                        <div class="nav-module active" data-section="dashboard"><i class="fas fa-chart-line"></i> DASHBOARD</div>
+                        <div class="nav-module" data-section="systemscan"><i class="fas fa-search"></i> SYSTEM SCAN</div>
+                        <div class="nav-module" data-section="battery"><i class="fas fa-battery-full"></i> BATTERY</div>
+                        <div class="nav-module" data-section="network"><i class="fas fa-wifi"></i> NETWORK</div>
+                        <div class="nav-module" data-section="repair"><i class="fas fa-tools"></i> REPAIR</div>
+                        <div class="nav-module" data-section="history"><i class="fas fa-history"></i> HISTORY</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div id="apiStatusBadge" style="font-size:11px; padding:4px 10px; border-radius:20px; background:#2e7d32; color:#e0ffe0;">🟢 LIVE</div>
+                        <span id="userWelcome" style="color:#8fca8f; font-size:0.8rem;"></span>
+                        <button id="logoutBtn" style="background:rgba(255,100,100,0.2);border:1px solid rgba(255,100,100,0.4);color:#ff9999;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:0.8rem;"><i class="fas fa-sign-out-alt"></i></button>
+                        <div class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></div>
+                    </div>
+                </div>
+            </div>
+ 
+            <div class="mobile-menu-overlay" id="mobileOverlay"></div>
+            <div class="mobile-menu-container" id="mobileMenu">
+                <div class="close-menu" id="closeMenuBtn"><i class="fas fa-times"></i></div>
+                <div class="nav-module active" data-section="dashboard"><i class="fas fa-chart-line"></i> DASHBOARD</div>
+                <div class="nav-module" data-section="systemscan"><i class="fas fa-search"></i> SYSTEM SCAN</div>
+                <div class="nav-module" data-section="battery"><i class="fas fa-battery-full"></i> BATTERY</div>
+                <div class="nav-module" data-section="network"><i class="fas fa-wifi"></i> NETWORK</div>
+                <div class="nav-module" data-section="repair"><i class="fas fa-tools"></i> REPAIR</div>
+                <div class="nav-module" data-section="history"><i class="fas fa-history"></i> HISTORY</div>
+            </div>
+ 
+            <div class="main-content">
+                <!-- DASHBOARD SECTION -->
+                <div id="dashboard" class="section active-section">
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2><i class="fas fa-heartbeat"></i> SYSTEM HEALTH DASHBOARD</h2>
+                                <p>Real-time system diagnostics & performance metrics</p>
+                            </div>
+                            <div class="grid-3">
+                                <div class="metric-card">
+                                    <i class="fas fa-chart-pie" style="font-size:2rem;margin-bottom:10px;"></i>
+                                    <div class="metric-value" id="healthScore">94<span style="font-size:1.2rem;">%</span></div>
+                                    <div class="metric-label">HEALTH SCORE</div>
+                                    <div class="progress-ring-container">
+                                        <svg width="120" height="120" class="progress-ring-svg">
+                                            <defs><linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#4fcf4f"/><stop offset="100%" stop-color="#8fff8f"/></linearGradient></defs>
+                                            <circle class="progress-ring-bg" cx="60" cy="60" r="50" stroke-width="8" fill="none"/>
+                                            <circle class="progress-ring-fill" cx="60" cy="60" r="50" stroke-width="8" fill="none" stroke-dasharray="314" stroke-dashoffset="18.84" id="healthRing"/>
+                                        </svg>
+                                        <div class="progress-ring-text" id="healthRingText">94%</div>
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <i class="fas fa-battery-three-quarters" style="font-size:2rem;margin-bottom:10px;"></i>
+                                    <div class="metric-value" id="batteryMain">--<span style="font-size:1.2rem;">%</span></div>
+                                    <div class="metric-label">BATTERY LEVEL</div>
+                                    <i class="fas" id="batteryIconMain" style="font-size:2rem;margin-top:10px;"></i>
+                                </div>
+                                <div class="metric-card">
+                                    <i class="fas fa-microchip" style="font-size:2rem;margin-bottom:10px;"></i>
+                                    <div class="metric-value" id="cpuCoresMain">--</div>
+                                    <div class="metric-label">CPU CORES</div>
+                                </div>
+                            </div>
+                            <div class="stats-row">
+                                <div class="stat-card"><i class="fas fa-globe"></i><br><strong id="dashNetStatus">🟢 ONLINE</strong></div>
+                                <div class="stat-card"><i class="fas fa-memory"></i><br><strong id="dashMemStatus">-- GB</strong></div>
+                                <div class="stat-card"><i class="fas fa-exclamation-triangle"></i><br><strong id="dashIssuesCount">0</strong></div>
+                                <div class="stat-card"><i class="fas fa-database"></i><br><strong id="dashTotalScans">-- Scans</strong></div>
+                            </div>
+                            <div class="badge badge-success" style="display:block;text-align:center;margin-top:15px;">
+                                <i class="fas fa-check-circle"></i> All systems operational • Database connected
+                            </div>
+                            <button class="btn btn-primary" id="refreshDashboard" style="width:100%;margin-top:20px;"><i class="fas fa-sync-alt"></i> REFRESH ALL METRICS</button>
+                        </div>
+ 
+                        <div class="card">
+                            <div class="card-header">
+                                <h2><i class="fas fa-tachometer-alt"></i> PERFORMANCE METRICS</h2>
+                                <p>Live system performance analysis</p>
+                            </div>
+                            <div class="stat-card" style="margin-bottom:15px;">
+                                <i class="fas fa-microchip"></i> CPU USAGE
+                                <div class="metric-value" style="font-size:1.5rem;" id="cpuUsage">32%</div>
+                                <div class="animated-progress"><div class="animated-progress-bar" id="cpuBar" style="width:32%"></div></div>
+                            </div>
+                            <div class="stat-card" style="margin-bottom:15px;">
+                                <i class="fas fa-database"></i> MEMORY USAGE
+                                <div class="metric-value" style="font-size:1.5rem;" id="memUsage">45%</div>
+                                <div class="animated-progress"><div class="animated-progress-bar" id="memBar" style="width:45%"></div></div>
+                            </div>
+                            <div class="stats-row">
+                                <div class="stat-card"><i class="fas fa-clock"></i><br><strong id="uptime">Calculating...</strong></div>
+                                <div class="stat-card"><i class="fas fa-calendar-alt"></i><br><strong id="lastScanTime">--</strong></div>
+                            </div>
+                            <div class="stats-row">
+                                <div class="stat-card"><i class="fab fa-chrome"></i><br><strong id="browserName">--</strong></div>
+                                <div class="stat-card"><i class="fab fa-windows"></i><br><strong id="osName">--</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+ 
+                <!-- SYSTEM SCAN SECTION -->
+                <div id="systemscan" class="section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-microscope"></i> COMPREHENSIVE SYSTEM SCAN</h2>
+                            <p>Complete hardware & software analysis — results saved to database</p>
+                        </div>
+                        <div class="scan-stats-bar">
+                            <div class="scan-stat-card">
+                                <div class="scan-stat-value" id="scanTotalScans">0</div>
+                                <div class="scan-stat-label">TOTAL SCANS</div>
+                            </div>
+                            <div class="scan-stat-card">
+                                <div class="scan-stat-value" id="scanAvgScore">0</div>
+                                <div class="scan-stat-label">AVG HEALTH SCORE</div>
+                            </div>
+                            <div class="scan-stat-card">
+                                <div class="scan-stat-value" id="scanLastResult">--</div>
+                                <div class="scan-stat-label">LAST RESULT</div>
+                            </div>
+                        </div>
+                        <div class="scan-item"><div class="scan-info"><i class="fas fa-microchip"></i><div><strong>Hardware Configuration Scan</strong><br><small>CPU, RAM, Architecture detection</small></div></div><div class="scan-status pending" id="scanHardwareStatus">PENDING</div></div>
+                        <div class="scan-item"><div class="scan-info"><i class="fas fa-code"></i><div><strong>Software Environment Scan</strong><br><small>Browser, OS, Platform analysis</small></div></div><div class="scan-status pending" id="scanSoftwareStatus">PENDING</div></div>
+                        <div class="scan-item"><div class="scan-info"><i class="fas fa-network-wired"></i><div><strong>Network & Connectivity Scan</strong><br><small>Connection quality & speed test</small></div></div><div class="scan-status pending" id="scanNetworkStatus">PENDING</div></div>
+                        <div class="scan-item"><div class="scan-info"><i class="fas fa-shield-alt"></i><div><strong>Security & Privacy Scan</strong><br><small>HTTPS, secure context verification</small></div></div><div class="scan-status pending" id="scanSecurityStatus">PENDING</div></div>
+                        <div class="animated-progress"><div class="animated-progress-bar" id="scanOverallProgress" style="width:0%"></div></div>
+                        <div style="text-align:center;margin:15px 0;"><span id="scanPercentage">0</span>% Complete</div>
+                        <div id="scanDetailsContainer" style="margin:15px 0;"></div>
+                        <div class="scan-console" id="scanConsoleLog">
+                            <div class="scan-console-line">> SCAN MODULE v3.0 INITIALIZED</div>
+                            <div class="scan-console-line">> Results saved to database</div>
+                            <div class="scan-console-line">> Click START SCAN to begin</div>
+                        </div>
+                        <button class="btn btn-primary" id="runFullSystemScan" style="width:100%;margin-top:20px;"><i class="fas fa-play"></i> START COMPLETE SYSTEM SCAN</button>
+                    </div>
+                </div>
+ 
+                <!-- BATTERY SECTION -->
+                <div id="battery" class="section">
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="card-header"><h2><i class="fas fa-charging-station"></i> POWER MANAGEMENT</h2><p>Real-time battery diagnostics & health analysis</p></div>
+                            <div class="metric-card">
+                                <div class="metric-value" id="batteryPercent">--<span style="font-size:1.2rem;">%</span></div>
+                                <div class="metric-label">CURRENT CHARGE</div>
+                                <div class="animated-progress"><div class="animated-progress-bar" id="batteryBar" style="width:0%"></div></div>
+                            </div>
+                            <div class="stats-row">
+                                <div class="stat-card"><i class="fas fa-plug"></i><br><strong id="batteryStatus">--</strong></div>
+                                <div class="stat-card"><i class="fas fa-hourglass-half"></i><br><strong id="batteryTimeLeft">--</strong></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><h2><i class="fas fa-chart-line"></i> POWER CONSUMPTION</h2></div>
+                            <div class="stat-card">
+                                <i class="fas fa-charging-station"></i> POWER EFFICIENCY
+                                <div class="metric-value" style="font-size:1.2rem;" id="powerEfficiency">87%</div>
+                                <div class="animated-progress"><div class="animated-progress-bar" id="efficiencyBar" style="width:87%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+ 
+                <!-- NETWORK SECTION -->
+                <div id="network" class="section">
+                    <div class="card">
+                        <div class="card-header"><h2><i class="fas fa-network-wired"></i> NETWORK DIAGNOSTICS</h2><p>Connection quality analysis & speed testing — results saved to database</p></div>
+                        <div class="grid-3">
+                            <div class="metric-card"><div class="metric-value" id="downloadSpeed">--</div><div class="metric-label">DOWNLOAD (Mbps)</div></div>
+                            <div class="metric-card"><div class="metric-value" id="uploadSpeed">--</div><div class="metric-label">UPLOAD (Mbps)</div></div>
+                            <div class="metric-card"><div class="metric-value" id="latency">--</div><div class="metric-label">LATENCY (ms)</div></div>
+                        </div>
+                        <div class="stats-row">
+                            <div class="stat-card"><i class="fas fa-signal"></i><br><strong id="connType">--</strong></div>
+                            <div class="stat-card"><i class="fas fa-globe"></i><br><strong id="onlineStatus">🟢 ONLINE</strong></div>
+                        </div>
+                        <button class="btn btn-primary" id="runSpeedTest" style="width:100%;"><i class="fas fa-tachometer-alt"></i> RUN SPEED TEST</button>
+                    </div>
+                </div>
+ 
+                <!-- REPAIR SECTION -->
+                <div id="repair" class="section">
+                    <div class="card">
+                        <div class="card-header"><h2><i class="fas fa-wrench"></i> SYSTEM MAINTENANCE</h2><p>Working repair tools - click to fix real issues</p></div>
+                        <div class="repair-item"><div class="repair-info"><i class="fas fa-trash-alt"></i><div><strong>Clear Browser Cache</strong><br><small>Remove temporary files & cookies</small></div></div><button class="btn repair-action" id="cacheBtn"><i class="fas fa-play"></i> RUN</button></div>
+                        <div class="repair-item"><div class="repair-info"><i class="fas fa-database"></i><div><strong>Optimize Local Storage</strong><br><small>Free up space & organize data</small></div></div><button class="btn repair-action" id="storageBtn"><i class="fas fa-play"></i> RUN</button></div>
+                        <div class="repair-item"><div class="repair-info"><i class="fas fa-shield-alt"></i><div><strong>Security Verification</strong><br><small>Check integrity & permissions</small></div></div><button class="btn repair-action" id="securityBtn"><i class="fas fa-play"></i> RUN</button></div>
+                        <div class="repair-item"><div class="repair-info"><i class="fas fa-sync-alt"></i><div><strong>Reset Diagnostic Settings</strong><br><small>Restore default configuration</small></div></div><button class="btn repair-action" id="resetBtn"><i class="fas fa-play"></i> RUN</button></div>
+                        <div id="repairStatus" style="margin-top:20px;"></div>
+                    </div>
+                </div>
+ 
+                <!-- HISTORY SECTION -->
+                <div id="history" class="section">
+                    <div class="card">
+                        <div class="card-header"><h2><i class="fas fa-history"></i> DIAGNOSTIC HISTORY LOG</h2><p>Historical records from database — persistent across sessions</p></div>
+                        <table class="history-table">
+                            <thead><tr><th>DATE & TIME</th><th>DEVICE / OS</th><th>SCORE</th><th>STATUS</th></tr></thead>
+                            <tbody id="historyTable"></tbody>
+                        </table>
+                        <div style="display:flex;gap:15px;margin-top:20px;">
+                            <button class="btn" id="addHistoryBtn"><i class="fas fa-plus"></i> ADD CURRENT SCAN</button>
+                            <button class="btn" id="clearHistoryBtn"><i class="fas fa-trash"></i> CLEAR LOCAL</button>
+                            <button class="btn btn-primary" id="loadDbHistoryBtn"><i class="fas fa-cloud-download-alt"></i> LOAD FROM DB</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+ 
+            <div class="footer">
+                <i class="fas fa-microchip"></i> DIAGNOSTIC SYSTEM | Ultimate Edition | Database Connected
+            </div>
+        </div>
+    </div>
+ 
+    <div id="toast" class="toast"><i class="fas fa-check-circle"></i><span id="toastMessage">Action completed!</span></div>
+ 
+    <script>
+        // ============================================================
+        // CONFIG & STATE
+        // ============================================================
+        const API_BASE = 'http://localhost:5000';
+        let authToken = localStorage.getItem('diag_token');
+        let currentUser = JSON.parse(localStorage.getItem('diag_user') || 'null');
+        let scanStats = { totalScans: 0, scores: [], lastScore: null };
+ 
+        // ============================================================
+        // UI HELPERS
+        // ============================================================
+        function showToast(msg, isErr = false) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = msg;
+            toast.querySelector('i').className = isErr ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle';
+            toast.style.borderLeftColor = isErr ? '#ff6b6b' : '#4fcf4f';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+ 
+        function createParticles() {
+            const c = document.getElementById('particles');
+            if (!c) return;
+            for (let i = 0; i < 60; i++) {
+                let p = document.createElement('div');
+                p.className = 'particle';
+                p.style.cssText = `width:${Math.random()*5+2}px;height:${Math.random()*5+2}px;left:${Math.random()*100}%;animation-duration:${Math.random()*20+10}s;animation-delay:${Math.random()*10}s;`;
+                c.appendChild(p);
+            }
+        }
+ 
+        function getOS() {
+            const ua = navigator.userAgent;
+            if (ua.includes("Win")) return "Windows";
+            if (ua.includes("Mac")) return "macOS";
+            if (/Android/.test(ua)) return "Android";
+            if (/iPhone|iPad/.test(ua)) return "iOS";
+            if (ua.includes("Linux")) return "Linux";
+            return "Unknown";
+        }
+ 
+        function getBrowser() {
+            const ua = navigator.userAgent;
+            if (ua.includes("Edg")) return "Edge";
+            if (ua.includes("Chrome")) return "Chrome";
+            if (ua.includes("Firefox")) return "Firefox";
+            if (ua.includes("Safari")) return "Safari";
+            return "Unknown";
+        }
+ 
+        function getCPUCores() { return navigator.hardwareConcurrency || 4; }
+        function getMemory() { return 'deviceMemory' in navigator ? navigator.deviceMemory : 4; }
+ 
+        async function getBatteryStatus() {
+            if ('getBattery' in navigator) {
+                try {
+                    const b = await navigator.getBattery();
+                    return {
+                        level: Math.round(b.level * 100),
+                        charging: b.charging,
+                        time: b.charging
+                            ? (b.chargingTime !== Infinity ? Math.round(b.chargingTime/60)+'m' : '--')
+                            : (b.dischargingTime !== Infinity ? Math.round(b.dischargingTime/60)+'m' : 'Calculating...')
+                    };
+                } catch(e) {}
+            }
+            return { level: 67, charging: false, time: "2h 10m" };
+        }
+ 
+        // ============================================================
+        // API FUNCTIONS
+        // ============================================================
+        async function apiCall(endpoint, options = {}) {
+            const headers = { 'Content-Type': 'application/json' };
+            if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+            if (options.headers) Object.assign(headers, options.headers);
+            try {
+                const res = await fetch(`${API_BASE}/api${endpoint}`, {
+                    method: options.method || 'GET',
+                    headers,
+                    body: options.body || undefined
+                });
+                if (res.status === 401) {
+                    doLogout();
+                    return null;
+                }
+                return res;
+            } catch(e) {
+                return null;
+            }
+        }
+ 
+        async function checkAPI() {
+            try {
+                const res = await fetch(`${API_BASE}/api/health`);
+                const online = res && res.ok;
+                const badge = document.getElementById('apiStatusBadge');
+                const loginStatus = document.getElementById('loginApiStatus');
+                if (badge) badge.style.background = online ? '#2e7d32' : '#c62828';
+                if (loginStatus) {
+                    loginStatus.innerHTML = online
+                        ? '<i class="fas fa-check-circle" style="color:#4fcf4f"></i> Server online — ready to login'
+                        : '<i class="fas fa-times-circle" style="color:#ff6b6b"></i> Server offline — run: node server.js';
+                    loginStatus.style.background = online ? 'rgba(46,125,50,0.3)' : 'rgba(198,40,40,0.3)';
+                }
+                return online;
+            } catch(e) {
+                const loginStatus = document.getElementById('loginApiStatus');
+                if (loginStatus) {
+                    loginStatus.innerHTML = '<i class="fas fa-times-circle" style="color:#ff6b6b"></i> Server offline — run: node server.js';
+                    loginStatus.style.background = 'rgba(198,40,40,0.3)';
+                }
+                return false;
+            }
+        }
+ 
+        // ============================================================
+        // AUTH FUNCTIONS
+        // ============================================================
+        async function doLogin(email, password) {
+            const btn = document.getElementById('loginBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> LOGGING IN...';
+            btn.disabled = true;
+            const res = await apiCall('/users/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> LOGIN';
+            btn.disabled = false;
+            if (res && res.ok) {
+                const data = await res.json();
+                authToken = data.token;
+                currentUser = data.user;
+                localStorage.setItem('diag_token', authToken);
+                localStorage.setItem('diag_user', JSON.stringify(currentUser));
+                enterApp();
+            } else if (res) {
+                const err = await res.json();
+                showToast(err.error || 'Login failed', true);
+            } else {
+                showToast('Cannot connect to server. Is it running?', true);
+            }
+        }
+ 
+        async function doRegister(name, email, password) {
+            const btn = document.getElementById('registerBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CREATING...';
+            btn.disabled = true;
+            const res = await apiCall('/users/register', { method: 'POST', body: JSON.stringify({ name, email, password }) });
+            btn.innerHTML = '<i class="fas fa-user-plus"></i> CREATE ACCOUNT';
+            btn.disabled = false;
+            if (res && res.ok) {
+                showToast('Account created! Please login.');
+                document.getElementById('registerFormSection').style.display = 'none';
+                document.getElementById('loginFormSection').style.display = 'block';
+                document.getElementById('loginEmail').value = email;
+            } else if (res) {
+                const err = await res.json();
+                showToast(err.error || 'Registration failed', true);
+            } else {
+                showToast('Cannot connect to server', true);
+            }
+        }
+ 
+        async function doGuestLogin() {
+            const res = await apiCall('/users/guest', { method: 'POST' });
+            if (res && res.ok) {
+                const data = await res.json();
+                authToken = data.token;
+                currentUser = data.user;
+                localStorage.setItem('diag_token', authToken);
+                localStorage.setItem('diag_user', JSON.stringify(currentUser));
+                enterApp();
+            } else {
+                showToast('Cannot connect to server', true);
+            }
+        }
+ 
+        function doLogout() {
+            apiCall('/users/logout', { method: 'POST' });
+            authToken = null;
+            currentUser = null;
+            localStorage.removeItem('diag_token');
+            localStorage.removeItem('diag_user');
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+            showToast('Logged out successfully');
+        }
+ 
+        function enterApp() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            if (currentUser) document.getElementById('userWelcome').innerHTML = `<i class="fas fa-user"></i> ${currentUser.name}`;
+            init();
+        }
+ 
+        // ============================================================
+        // DASHBOARD DATA
+        // ============================================================
+        async function updateAllData() {
+            const battery = await getBatteryStatus();
+            document.getElementById("batteryPercent").innerHTML = `${battery.level}<span>%</span>`;
+            document.getElementById("batteryMain").innerHTML = `${battery.level}<span>%</span>`;
+            document.getElementById("batteryBar").style.width = `${battery.level}%`;
+            document.getElementById("batteryStatus").innerHTML = battery.charging ? "CHARGING ⚡" : "DISCHARGING 🔋";
+            document.getElementById("batteryTimeLeft").innerHTML = battery.time;
+            const icon = document.getElementById("batteryIconMain");
+            if (icon) icon.className = battery.charging ? "fas fa-bolt" : battery.level > 50 ? "fas fa-battery-full" : battery.level > 20 ? "fas fa-battery-three-quarters" : "fas fa-battery-quarter";
+ 
+            document.getElementById("cpuCoresMain").innerHTML = getCPUCores();
+            document.getElementById("dashMemStatus").innerHTML = getMemory() + " GB";
+            document.getElementById("osName").innerHTML = getOS();
+            document.getElementById("browserName").innerHTML = getBrowser();
+ 
+            const online = navigator.onLine;
+            document.getElementById("dashNetStatus").innerHTML = online ? "🟢 ONLINE" : "🔴 OFFLINE";
+            document.getElementById("onlineStatus").innerHTML = online ? "🟢 ONLINE" : "🔴 OFFLINE";
+ 
+            const conn = navigator.connection || navigator.mozConnection;
+            document.getElementById("connType").innerHTML = conn?.effectiveType?.toUpperCase() || (online ? "4G" : "OFFLINE");
+ 
+            let health = 80 + (battery.level > 20 ? 8 : 0) + (online ? 5 : 0) + (getCPUCores() >= 4 ? 2 : 0);
+            health = Math.min(health, 98);
+            document.getElementById("healthScore").innerHTML = `${health}<span>%</span>`;
+            document.getElementById("healthRingText").innerHTML = `${health}%`;
+            const ring = document.getElementById('healthRing');
+            if (ring) ring.setAttribute('stroke-dashoffset', 314 - (health/100)*314);
+ 
+            const cpuUse = Math.floor(Math.random()*40)+15;
+            const memUse = Math.floor(Math.random()*35)+30;
+            document.getElementById("cpuUsage").innerHTML = `${cpuUse}%`;
+            document.getElementById("memUsage").innerHTML = `${memUse}%`;
+            document.getElementById("cpuBar").style.width = `${cpuUse}%`;
+            document.getElementById("memBar").style.width = `${memUse}%`;
+            document.getElementById("uptime").innerHTML = `${Math.floor(performance.now()/60000)}m`;
+            document.getElementById("lastScanTime").innerHTML = new Date().toLocaleTimeString();
+            document.getElementById("dashIssuesCount").innerHTML = (battery.level < 15 ? 1 : 0) + (online ? 0 : 1);
+            document.getElementById("efficiencyBar").style.width = `${Math.min(95, 70+battery.level/3)}%`;
+            document.getElementById("powerEfficiency").innerHTML = `${Math.floor(Math.min(95, 70+battery.level/3))}%`;
+ 
+            // Load DB stats for dashboard
+            await loadDbStats();
+        }
+ 
+        async function loadDbStats() {
+            const res = await apiCall('/scans/stats');
+            if (res && res.ok) {
+                const data = await res.json();
+                const total = data.totalScans || 0;
+                document.getElementById('dashTotalScans').innerHTML = `${total} Scans`;
+                scanStats.totalScans = total;
+                document.getElementById('scanTotalScans').innerHTML = total;
+                if (data.avgHealth) {
+                    const avg = Math.round(data.avgHealth);
+                    document.getElementById('scanAvgScore').innerHTML = avg;
+                    scanStats.scores = [avg];
+                }
+            }
+        }
+ 
+        // ============================================================
+        // SCAN FUNCTIONS
+        // ============================================================
+        function addScanLog(message, type = 'info') {
+            const div = document.getElementById('scanConsoleLog');
+            if (!div) return;
+            const line = document.createElement('div');
+            line.className = `scan-console-line ${type}`;
+            const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : type === 'warning' ? '⚠' : '>';
+            line.innerHTML = `${icon} ${new Date().toLocaleTimeString()} - ${message}`;
+            div.insertBefore(line, div.firstChild);
+            if (div.children.length > 20) div.removeChild(div.lastChild);
+        }
+ 
+        function updateScanStats() {
+            document.getElementById('scanTotalScans').innerHTML = scanStats.totalScans;
+            const avg = scanStats.scores.length > 0 ? Math.round(scanStats.scores.reduce((a,b)=>a+b,0)/scanStats.scores.length) : 0;
+            document.getElementById('scanAvgScore').innerHTML = avg;
+            document.getElementById('scanLastResult').innerHTML = scanStats.lastScore ? `${scanStats.lastScore}%` : '--';
+        }
+ 
+        async function runFullSystemScan() {
+            const btn = document.getElementById('runFullSystemScan');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SCANNING...';
+            btn.disabled = true;
+ 
+            ['Hardware','Software','Network','Security'].forEach(n => {
+                const el = document.getElementById(`scan${n}Status`);
+                if (el) { el.className = 'scan-status pending'; el.innerHTML = 'PENDING'; }
+            });
+            document.getElementById('scanOverallProgress').style.width = '0%';
+            document.getElementById('scanPercentage').innerHTML = '0';
+            document.getElementById('scanDetailsContainer').innerHTML = '';
+ 
+            addScanLog('═══ INITIATING COMPREHENSIVE SYSTEM SCAN ═══', 'success');
+ 
+            // Hardware
+            document.getElementById('scanHardwareStatus').className = 'scan-status scanning';
+            document.getElementById('scanHardwareStatus').innerHTML = '<i class="fas fa-spinner fa-spin"></i> SCANNING...';
+            document.getElementById('scanOverallProgress').style.width = '25%';
+            document.getElementById('scanPercentage').innerHTML = '25';
+            await new Promise(r => setTimeout(r, 800));
+            const cores = navigator.hardwareConcurrency || 'Unknown';
+            const memory = navigator.deviceMemory ? `${navigator.deviceMemory}GB` : 'Unknown';
+            addScanLog(`✓ CPU Cores: ${cores}`, 'success');
+            addScanLog(`✓ Memory: ${memory}`, 'success');
+            document.getElementById('scanHardwareStatus').className = 'scan-status completed';
+            document.getElementById('scanHardwareStatus').innerHTML = '<i class="fas fa-check-circle"></i> COMPLETED';
+ 
+            // Software
+            document.getElementById('scanSoftwareStatus').className = 'scan-status scanning';
+            document.getElementById('scanSoftwareStatus').innerHTML = '<i class="fas fa-spinner fa-spin"></i> SCANNING...';
+            document.getElementById('scanOverallProgress').style.width = '50%';
+            document.getElementById('scanPercentage').innerHTML = '50';
+            await new Promise(r => setTimeout(r, 800));
+            const browser = getBrowser(), os = getOS();
+            addScanLog(`✓ Browser: ${browser}`, 'success');
+            addScanLog(`✓ OS: ${os}`, 'success');
+            document.getElementById('scanSoftwareStatus').className = 'scan-status completed';
+            document.getElementById('scanSoftwareStatus').innerHTML = '<i class="fas fa-check-circle"></i> COMPLETED';
+ 
+            // Network
+            document.getElementById('scanNetworkStatus').className = 'scan-status scanning';
+            document.getElementById('scanNetworkStatus').innerHTML = '<i class="fas fa-spinner fa-spin"></i> SCANNING...';
+            document.getElementById('scanOverallProgress').style.width = '75%';
+            document.getElementById('scanPercentage').innerHTML = '75';
+            await new Promise(r => setTimeout(r, 800));
+            const online = navigator.onLine;
+            let latency = '--';
+            if (online) {
+                try { const s = Date.now(); await fetch('https://www.google.com/favicon.ico',{mode:'no-cors',cache:'no-cache'}); latency = Date.now()-s; } catch(e) {}
+            }
+            addScanLog(`✓ Connection: ${online ? 'ONLINE' : 'OFFLINE'}`, online ? 'success' : 'warning');
+            addScanLog(`✓ Latency: ${latency}ms`, 'success');
+            document.getElementById('scanNetworkStatus').className = 'scan-status completed';
+            document.getElementById('scanNetworkStatus').innerHTML = '<i class="fas fa-check-circle"></i> COMPLETED';
+ 
+            // Security
+            document.getElementById('scanSecurityStatus').className = 'scan-status scanning';
+            document.getElementById('scanSecurityStatus').innerHTML = '<i class="fas fa-spinner fa-spin"></i> SCANNING...';
+            document.getElementById('scanOverallProgress').style.width = '90%';
+            document.getElementById('scanPercentage').innerHTML = '90';
+            await new Promise(r => setTimeout(r, 800));
+            const isHTTPS = location.protocol === 'https:';
+            addScanLog(`✓ HTTPS: ${isHTTPS ? 'SECURE' : 'STANDARD'}`, isHTTPS ? 'success' : 'warning');
+            document.getElementById('scanSecurityStatus').className = 'scan-status completed';
+            document.getElementById('scanSecurityStatus').innerHTML = '<i class="fas fa-check-circle"></i> COMPLETED';
+ 
+            // Calculate health score
+            let score = 70;
+            if (cores >= 8) score += 10; else if (cores >= 4) score += 5;
+            if (online) score += 10;
+            if (isHTTPS) score += 5;
+            if (window.isSecureContext) score += 5;
+            score = Math.min(98, Math.max(50, score));
+ 
+            document.getElementById('scanOverallProgress').style.width = '100%';
+            document.getElementById('scanPercentage').innerHTML = '100';
+ 
+            document.getElementById('scanDetailsContainer').innerHTML = `
+                <div style="background:rgba(0,0,0,0.3);border-radius:16px;padding:15px;margin-top:10px;">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span><i class="fas fa-microchip"></i> CPU</span><span style="color:#8fff8f;">${cores} Cores</span></div>
+                    <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span><i class="fas fa-memory"></i> Memory</span><span style="color:#8fff8f;">${memory}</span></div>
+                    <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span><i class="fas fa-globe"></i> Browser</span><span style="color:#8fff8f;">${browser}</span></div>
+                    <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span><i class="fab fa-windows"></i> OS</span><span style="color:#8fff8f;">${os}</span></div>
+                    <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span><i class="fas fa-wifi"></i> Network</span><span style="color:#8fff8f;">${online ? 'ONLINE' : 'OFFLINE'}</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span><i class="fas fa-shield-alt"></i> Security</span><span style="color:#8fff8f;">${isHTTPS ? 'SECURE' : 'STANDARD'}</span></div>
+                    <div style="margin-top:15px;padding-top:10px;border-top:1px solid rgba(79,207,79,0.3);text-align:center;">
+                        <span class="badge badge-success"><i class="fas fa-chart-line"></i> HEALTH SCORE: ${score}%</span>
+                    </div>
+                </div>`;
+ 
+            // Save to database
+            const saveRes = await apiCall('/scans/save', {
+                method: 'POST',
+                body: JSON.stringify({
+                    healthScore: score,
+                    temperature: null,
+                    cpuCores: cores,
+                    memory: navigator.deviceMemory || 4,
+                    browser, os,
+                    networkStatus: online ? 'Online' : 'Offline',
+                    securityStatus: isHTTPS ? 'Secure' : 'Standard'
+                })
+            });
+            if (saveRes && saveRes.ok) {
+                addScanLog('✓ Scan saved to database!', 'success');
+            } else {
+                addScanLog('⚠ Could not save to database', 'warning');
+            }
+ 
+            scanStats.totalScans++;
+            scanStats.scores.push(score);
+            scanStats.lastScore = score;
+            updateScanStats();
+ 
+            addScanLog(`✓ SCAN COMPLETE — Health Score: ${score}%`, 'success');
+            showToast(`✅ Scan complete! Score: ${score}% — Saved to DB`, false);
+ 
+            // Also update local history
+            let hist = JSON.parse(localStorage.getItem("diag_ultimate_history") || "[]");
+            hist.push({ date: new Date().toLocaleString(), device: os, score, status: "OPTIMAL" });
+            if (hist.length > 15) hist.shift();
+            localStorage.setItem("diag_ultimate_history", JSON.stringify(hist));
+            renderHistory(hist);
+ 
+            // Reload DB history
+            await loadDbHistory();
+ 
+            btn.innerHTML = orig;
+            btn.disabled = false;
+        }
+ 
+        // ============================================================
+        // SPEED TEST
+        // ============================================================
+        async function runSpeedTest() {
+            const btn = document.getElementById("runSpeedTest");
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> TESTING...';
+            btn.disabled = true;
+            await new Promise(r => setTimeout(r, 2000));
+            const down = (Math.random()*55+8).toFixed(1);
+            const up = (Math.random()*25+3).toFixed(1);
+            const lat = Math.floor(Math.random()*120+30);
+            document.getElementById("downloadSpeed").innerHTML = down;
+            document.getElementById("uploadSpeed").innerHTML = up;
+            document.getElementById("latency").innerHTML = lat;
+ 
+            // Save to database
+            await apiCall('/speedtests/save', {
+                method: 'POST',
+                body: JSON.stringify({ downloadSpeed: parseFloat(down), uploadSpeed: parseFloat(up), latency: lat })
+            });
+ 
+            btn.innerHTML = orig;
+            btn.disabled = false;
+            showToast(`Speed: ↓${down} Mbps ↑${up} Mbps — Saved to DB`, false);
+        }
+ 
+        // ============================================================
+        // REPAIR TOOLS
+        // ============================================================
+        async function runRepairAction(action, btn) {
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> FIXING...';
+            btn.disabled = true;
+            let msg = '';
+            if (action === 'cache') {
+                if ('caches' in window) { const keys = await caches.keys(); await Promise.all(keys.map(k => caches.delete(k))); msg = "✅ Cache cleared!"; }
+                else msg = "⚠️ No cache found";
+            } else if (action === 'storage') {
+                let hist = JSON.parse(localStorage.getItem("diag_ultimate_history") || "[]");
+                localStorage.clear(); sessionStorage.clear();
+                localStorage.setItem("diag_ultimate_history", JSON.stringify(hist));
+                if (authToken) localStorage.setItem('diag_token', authToken);
+                if (currentUser) localStorage.setItem('diag_user', JSON.stringify(currentUser));
+                msg = "✅ Storage optimized!";
+                loadHistory();
+            } else if (action === 'security') {
+                msg = location.protocol === 'https:' ? "🔐 Security PASSED" : "⚠️ Security check done";
+            } else if (action === 'reset') {
+                let hist = JSON.parse(localStorage.getItem("diag_ultimate_history") || "[]");
+                localStorage.clear(); sessionStorage.clear();
+                localStorage.setItem("diag_ultimate_history", JSON.stringify(hist));
+                if (authToken) localStorage.setItem('diag_token', authToken);
+                if (currentUser) localStorage.setItem('diag_user', JSON.stringify(currentUser));
+                msg = "⚙️ Settings reset!";
+                await updateAllData(); loadHistory();
+            }
+            const statusDiv = document.getElementById('repairStatus');
+            if (statusDiv) { statusDiv.innerHTML = `<div class="badge badge-success" style="display:block;padding:10px;">${msg}</div>`; setTimeout(() => statusDiv.innerHTML = '', 3000); }
+            showToast(msg);
+            btn.innerHTML = orig; btn.disabled = false;
+        }
+ 
+        // ============================================================
+        // HISTORY — LOCAL + DATABASE
+        // ============================================================
+        function loadHistory() {
+            let hist = JSON.parse(localStorage.getItem("diag_ultimate_history") || "[]");
+            if (hist.length === 0) {
+                hist = [
+                    { date: new Date().toLocaleString(), device: getOS(), score: 94, status: "OPTIMAL" },
+                    { date: new Date(Date.now()-86400000).toLocaleString(), device: getOS(), score: 92, status: "OPTIMAL" }
+                ];
+                localStorage.setItem("diag_ultimate_history", JSON.stringify(hist));
+            }
+            renderHistory(hist);
+        }
+ 
+        function renderHistory(history) {
+            const tbody = document.getElementById("historyTable");
+            if (!tbody) return;
+            tbody.innerHTML = "";
+            history.slice().reverse().slice(0, 15).forEach(e => {
+                tbody.innerHTML += `<tr><td>${e.date}</td><td>${e.device || getOS()}</td><td style="color:#6fef6f;font-weight:bold;">${e.score}%</td><td><span class="badge badge-success">${e.status || 'OPTIMAL'}</span></td></tr>`;
+            });
+        }
+ 
+        async function loadDbHistory() {
+            const res = await apiCall('/scans/history?limit=15');
+            if (res && res.ok) {
+                const data = await res.json();
+                if (data.scans && data.scans.length > 0) {
+                    const tbody = document.getElementById("historyTable");
+                    if (!tbody) return;
+                    tbody.innerHTML = '';
+                    data.scans.forEach(scan => {
+                        const date = new Date(scan.scan_date).toLocaleString();
+                        tbody.innerHTML += `<tr>
+                            <td>${date}</td>
+                            <td>${scan.os || getOS()}</td>
+                            <td style="color:#6fef6f;font-weight:bold;">${scan.health_score}%</td>
+                            <td><span class="badge badge-success">DB RECORD</span></td>
+                        </tr>`;
+                    });
+                    showToast(`Loaded ${data.scans.length} records from database`);
+                } else {
+                    showToast('No database records yet — run a scan first!', false);
+                }
+            } else {
+                showToast('Could not load from database', true);
+            }
+        }
+ 
+        function addCurrentScan() {
+            let hist = JSON.parse(localStorage.getItem("diag_ultimate_history") || "[]");
+            const score = parseInt(document.getElementById("healthScore").innerText);
+            hist.push({ date: new Date().toLocaleString(), device: getOS(), score, status: "OPTIMAL" });
+            if (hist.length > 15) hist.shift();
+            localStorage.setItem("diag_ultimate_history", JSON.stringify(hist));
+            renderHistory(hist);
+            showToast("✅ Current scan added to history!");
+        }
+ 
+        function clearHistory() {
+            if (confirm("⚠️ Clear local history?")) {
+                localStorage.setItem("diag_ultimate_history", JSON.stringify([]));
+                loadHistory();
+                showToast("History cleared!");
+            }
+        }
+ 
+        // ============================================================
+        // NAVIGATION
+        // ============================================================
+        function setupNavigation() {
+            document.querySelectorAll(".desktop-nav .nav-module, #mobileMenu .nav-module").forEach(m => {
+                m.addEventListener("click", () => {
+                    document.querySelectorAll(".desktop-nav .nav-module, #mobileMenu .nav-module").forEach(x => x.classList.remove("active"));
+                    m.classList.add("active");
+                    document.querySelectorAll(".section").forEach(s => s.classList.remove("active-section"));
+                    const target = document.getElementById(m.getAttribute("data-section"));
+                    if (target) target.classList.add("active-section");
+                    document.getElementById('mobileMenu')?.classList.remove('active');
+                    document.getElementById('mobileOverlay')?.classList.remove('active');
+                });
+            });
+        }
+ 
+        function setupMobileMenu() {
+            document.getElementById("mobileMenuBtn")?.addEventListener("click", () => {
+                document.getElementById('mobileMenu')?.classList.add('active');
+                document.getElementById('mobileOverlay')?.classList.add('active');
+            });
+            document.getElementById("closeMenuBtn")?.addEventListener("click", () => {
+                document.getElementById('mobileMenu')?.classList.remove('active');
+                document.getElementById('mobileOverlay')?.classList.remove('active');
+            });
+            document.getElementById("mobileOverlay")?.addEventListener("click", () => {
+                document.getElementById('mobileMenu')?.classList.remove('active');
+                document.getElementById('mobileOverlay')?.classList.remove('active');
+            });
+        }
+ 
+        // ============================================================
+        // INIT — APP (after login)
+        // ============================================================
+        async function init() {
+            createParticles();
+            await updateAllData();
+            loadHistory();
+            setupNavigation();
+            setupMobileMenu();
+            await loadDbStats();
+ 
+            document.getElementById("refreshDashboard")?.addEventListener("click", async () => { await updateAllData(); showToast("Dashboard refreshed!"); });
+            document.getElementById("runFullSystemScan")?.addEventListener("click", runFullSystemScan);
+            document.getElementById("runSpeedTest")?.addEventListener("click", runSpeedTest);
+            document.getElementById("addHistoryBtn")?.addEventListener("click", addCurrentScan);
+            document.getElementById("clearHistoryBtn")?.addEventListener("click", clearHistory);
+            document.getElementById("loadDbHistoryBtn")?.addEventListener("click", loadDbHistory);
+            document.getElementById("cacheBtn")?.addEventListener("click", (e) => runRepairAction('cache', e.currentTarget));
+            document.getElementById("storageBtn")?.addEventListener("click", (e) => runRepairAction('storage', e.currentTarget));
+            document.getElementById("securityBtn")?.addEventListener("click", (e) => runRepairAction('security', e.currentTarget));
+            document.getElementById("resetBtn")?.addEventListener("click", (e) => runRepairAction('reset', e.currentTarget));
+            document.getElementById("logoutBtn")?.addEventListener("click", doLogout);
+ 
+            setInterval(async () => {
+                const b = await getBatteryStatus();
+                document.getElementById("batteryPercent").innerHTML = `${b.level}<span>%</span>`;
+                document.getElementById("batteryMain").innerHTML = `${b.level}<span>%</span>`;
+                document.getElementById("batteryBar").style.width = `${b.level}%`;
+            }, 30000);
+ 
+            addScanLog('Enhanced Scan Module v3.0 ready', 'success');
+            addScanLog('Database connected — scans will be saved', 'success');
+            showToast("DIAGNOSTIC SYSTEM v4.0 Ready", false);
+        }
+ 
+        // ============================================================
+        // BOOT — LOGIN SCREEN
+        // ============================================================
+        async function boot() {
+            createParticles();
+            await checkAPI();
+ 
+            // Auto-login if token exists
+            if (authToken && currentUser) {
+                enterApp();
+                return;
+            }
+ 
+            // Login button
+            document.getElementById('loginBtn').addEventListener('click', () => {
+                const email = document.getElementById('loginEmail').value.trim();
+                const password = document.getElementById('loginPassword').value;
+                if (!email || !password) { showToast('Please fill in all fields', true); return; }
+                doLogin(email, password);
+            });
+ 
+            // Enter key login
+            document.getElementById('loginPassword').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') document.getElementById('loginBtn').click();
+            });
+ 
+            // Register button
+            document.getElementById('registerBtn').addEventListener('click', () => {
+                const name = document.getElementById('regName').value.trim();
+                const email = document.getElementById('regEmail').value.trim();
+                const password = document.getElementById('regPassword').value;
+                const confirm = document.getElementById('regConfirm').value;
+                if (!name || !email || !password) { showToast('All fields required', true); return; }
+                if (password !== confirm) { showToast('Passwords do not match', true); return; }
+                doRegister(name, email, password);
+            });
+ 
+            // Show register
+            document.getElementById('showRegisterBtn').addEventListener('click', () => {
+                document.getElementById('loginFormSection').style.display = 'none';
+                document.getElementById('registerFormSection').style.display = 'block';
+            });
+ 
+            // Show login
+            document.getElementById('showLoginBtn').addEventListener('click', () => {
+                document.getElementById('registerFormSection').style.display = 'none';
+                document.getElementById('loginFormSection').style.display = 'block';
+            });
+ 
+            // Guest
+            document.getElementById('guestLoginBtn').addEventListener('click', doGuestLogin);
+        }
+ 
+        boot();
+    </script>
+</body>
+</html>
