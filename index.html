@@ -290,7 +290,7 @@
         // ============================================================
         // CONFIG & STATE
         // ============================================================
-        const API_BASE = 'http://localhost:5000';
+       const API_BASE = 'https://diagnostic-app-puce.vercel.app';
         let authToken = localStorage.getItem('diag_token');
         let currentUser = JSON.parse(localStorage.getItem('diag_user') || 'null');
         let scanStats = { totalScans: 0, scores: [], lastScore: null };
