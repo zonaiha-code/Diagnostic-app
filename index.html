@@ -13,90 +13,47 @@
     <div class="glow-orb glow-orb-2"></div>
  
     <!-- ========== LOGIN SCREEN ========== -->
-    <div id="loginScreen" style="min-height:100vh; background:linear-gradient(135deg,#0a0f0a 0%,#020502 50%,#0a0f0a 100%); position:fixed; top:0; left:0; width:100%; z-index:9999; overflow-y:auto; padding:50px 20px;">
-        <div class="login-wrap">
-
-            <!-- Hero -->
-            <div class="login-hero">
-                <i class="fas fa-microchip" style="font-size:2.6rem; color:#4fcf4f; filter:drop-shadow(0 0 12px #4fcf4f);"></i>
-                <h1>DIAGNOSTIC SYSTEM <span class="login-hero-tag">Ultimate Edition</span></h1>
-                <h2>Know Your Device's Health</h2>
-                <p>A smart, web-based diagnostic tool that checks your CPU, memory, battery, storage, temperature &amp; network in real-time — then gives you clear, actionable reports to keep your device running at peak performance.<br><span class="login-hero-highlight">Free, in-browser, and no installation needed.</span></p>
+    <div id="loginScreen" style="display:flex; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(135deg,#0a0f0a 0%,#020502 50%,#0a0f0a 100%); position:fixed; top:0; left:0; width:100%; z-index:9999; overflow-y:auto;">
+        <div style="background:rgba(12,18,12,0.95); border:1px solid rgba(79,207,79,0.3); border-radius:24px; padding:40px; width:100%; max-width:420px; margin:20px;">
+            <div style="text-align:center; margin-bottom:30px;">
+                <i class="fas fa-microchip" style="font-size:3rem; color:#4fcf4f; margin-bottom:10px; display:block;"></i>
+                <h2 style="color:#e0ffe0; font-size:1.5rem; letter-spacing:3px;">DIAGNOSTIC SYSTEM</h2>
+                <p style="color:#8fca8f; font-size:0.85rem;">Ultimate Edition v4.0</p>
             </div>
 
-            <!-- Feature cards -->
-            <div class="login-features">
-                <div class="login-feature-box">
-                    <i class="fas fa-search"></i>
-                    <h3>System Scan</h3>
-                    <p>One-click, full hardware &amp; software health check.</p>
-                </div>
-                <div class="login-feature-box">
-                    <i class="fas fa-chart-line"></i>
-                    <h3>Real-Time Monitoring</h3>
-                    <p>Live CPU, memory, battery &amp; network tracking.</p>
-                </div>
-                <div class="login-feature-box">
-                    <i class="fas fa-lightbulb"></i>
-                    <h3>Smart Suggestions</h3>
-                    <p>Detects issues and recommends practical fixes.</p>
-                </div>
-                <div class="login-feature-box">
-                    <i class="fas fa-file-alt"></i>
-                    <h3>Detailed Reports</h3>
-                    <p>Downloadable summaries of every diagnostic scan.</p>
-                </div>
+            <!-- API Status -->
+            <div id="loginApiStatus" style="text-align:center; font-size:12px; margin-bottom:20px; padding:6px 12px; border-radius:20px; background:rgba(0,0,0,0.4);">
+                <i class="fas fa-circle-notch fa-spin"></i> Connecting to server...
             </div>
 
-            <!-- Auth Card -->
-            <div class="auth-card">
-                <div class="auth-card-title"><i class="fas fa-key"></i> Sign In to Diagnostic System</div>
-
-                <!-- API Status -->
-                <div id="loginApiStatus" style="text-align:center; font-size:12px; margin-bottom:18px; padding:6px 12px; border-radius:20px; background:rgba(0,0,0,0.4);">
-                    <i class="fas fa-circle-notch fa-spin"></i> Connecting to server...
+            <!-- Login Form -->
+            <div id="loginFormSection">
+                <input type="email" id="loginEmail" placeholder="Email Address" style="width:100%;padding:12px 16px;margin:8px 0;background:rgba(0,0,0,0.4);border:1px solid rgba(79,207,79,0.3);border-radius:50px;color:#e0ffe0;outline:none;font-size:0.9rem;">
+                <input type="password" id="loginPassword" placeholder="Password" style="width:100%;padding:12px 16px;margin:8px 0;background:rgba(0,0,0,0.4);border:1px solid rgba(79,207,79,0.3);border-radius:50px;color:#e0ffe0;outline:none;font-size:0.9rem;">
+                <button id="loginBtn" style="width:100%;padding:14px;margin-top:12px;background:linear-gradient(135deg,#27b095,#4CAF50);border:none;border-radius:50px;color:#0a0f0a;font-weight:700;font-size:1rem;cursor:pointer;letter-spacing:2px;">
+                    <i class="fas fa-sign-in-alt"></i> LOGIN
+                </button>
+                <div style="text-align:center; margin-top:15px; font-size:0.9rem;">
+                    <a id="showRegisterBtn" style="color:#4CAF50; cursor:pointer; text-decoration:none;">Register</a>
+                    <span style="color:#8fca8f;"> | </span>
+                    <a id="guestLoginBtn" style="color:#4CAF50; cursor:pointer; text-decoration:none;">Guest Access</a>
                 </div>
-
-                <div class="auth-tabs">
-                    <div class="auth-tab active" id="showLoginTabBtn">Sign In</div>
-                    <div class="auth-tab" id="showRegisterTabBtn">Create Account</div>
-                </div>
-
-                <!-- Login Form -->
-                <div id="loginFormSection">
-                    <label class="auth-label"><i class="fas fa-envelope"></i> EMAIL ADDRESS</label>
-                    <input type="email" id="loginEmail" placeholder="you@example.com" class="auth-input">
-                    <label class="auth-label"><i class="fas fa-lock"></i> PASSWORD</label>
-                    <input type="password" id="loginPassword" placeholder="Min. 4 characters" class="auth-input">
-                    <button id="loginBtn" class="auth-submit-btn">
-                        <i class="fas fa-sign-in-alt"></i> SIGN IN
-                    </button>
-                    <div style="text-align:center; margin-top:15px; font-size:0.9rem;">
-                        <a id="guestLoginBtn" style="color:#4CAF50; cursor:pointer; text-decoration:none;"><i class="fas fa-user-clock"></i> Continue as Guest</a>
-                    </div>
-                </div>
-
-                <!-- Register Form -->
-                <div id="registerFormSection" style="display:none;">
-                    <label class="auth-label"><i class="fas fa-user"></i> FULL NAME</label>
-                    <input type="text" id="regName" placeholder="Your Name" class="auth-input">
-                    <label class="auth-label"><i class="fas fa-envelope"></i> EMAIL ADDRESS</label>
-                    <input type="email" id="regEmail" placeholder="you@example.com" class="auth-input">
-                    <label class="auth-label"><i class="fas fa-lock"></i> PASSWORD</label>
-                    <input type="password" id="regPassword" placeholder="Min. 4 characters" class="auth-input">
-                    <label class="auth-label"><i class="fas fa-lock"></i> CONFIRM PASSWORD</label>
-                    <input type="password" id="regConfirm" placeholder="Re-enter password" class="auth-input">
-                    <button id="registerBtn" class="auth-submit-btn">
-                        <i class="fas fa-user-plus"></i> CREATE ACCOUNT
-                    </button>
-                </div>
-
-                <!-- kept for JS compatibility, hidden -->
-                <a id="showRegisterBtn" style="display:none;"></a>
-                <a id="showLoginBtn" style="display:none;"></a>
+                <p style="text-align:center; margin-top:15px; font-size:11px; color:#8fca8f;">A comprehensive web-based diagnostic tool that monitors your system health, battery, network performance, and CPU temperature in real-time — keeping your device running at peak performance.</p>
             </div>
 
-            <div class="login-footer-note">DIAGNOSTIC SYSTEM · Ultimate Edition v4.0 — LCWU Final Year Project</div>
+            <!-- Register Form -->
+            <div id="registerFormSection" style="display:none;">
+                <input type="text" id="regName" placeholder="Full Name" style="width:100%;padding:12px 16px;margin:8px 0;background:rgba(0,0,0,0.4);border:1px solid rgba(79,207,79,0.3);border-radius:50px;color:#e0ffe0;outline:none;font-size:0.9rem;">
+                <input type="email" id="regEmail" placeholder="Email Address" style="width:100%;padding:12px 16px;margin:8px 0;background:rgba(0,0,0,0.4);border:1px solid rgba(79,207,79,0.3);border-radius:50px;color:#e0ffe0;outline:none;font-size:0.9rem;">
+                <input type="password" id="regPassword" placeholder="Password (min 4 chars)" style="width:100%;padding:12px 16px;margin:8px 0;background:rgba(0,0,0,0.4);border:1px solid rgba(79,207,79,0.3);border-radius:50px;color:#e0ffe0;outline:none;font-size:0.9rem;">
+                <input type="password" id="regConfirm" placeholder="Confirm Password" style="width:100%;padding:12px 16px;margin:8px 0;background:rgba(0,0,0,0.4);border:1px solid rgba(79,207,79,0.3);border-radius:50px;color:#e0ffe0;outline:none;font-size:0.9rem;">
+                <button id="registerBtn" style="width:100%;padding:14px;margin-top:12px;background:linear-gradient(135deg,#27b095,#4CAF50);border:none;border-radius:50px;color:#0a0f0a;font-weight:700;font-size:1rem;cursor:pointer;letter-spacing:2px;">
+                    <i class="fas fa-user-plus"></i> CREATE ACCOUNT
+                </button>
+                <div style="text-align:center; margin-top:15px;">
+                    <a id="showLoginBtn" style="color:#4CAF50; cursor:pointer; font-size:0.9rem;">← Back to Login</a>
+                </div>
+            </div>
         </div>
     </div>
  
@@ -587,7 +544,7 @@
             localStorage.removeItem('diag_token');
             localStorage.removeItem('diag_user');
             document.getElementById('mainApp').style.display = 'none';
-            document.getElementById('loginScreen').style.display = 'block';
+            document.getElementById('loginScreen').style.display = 'flex';
             showToast('Logged out successfully');
         }
  
@@ -1224,23 +1181,17 @@
                 doRegister(name, email, password);
             });
  
-            // Tab switching: Sign In / Create Account
-            function showLoginTab() {
-                document.getElementById('registerFormSection').style.display = 'none';
-                document.getElementById('loginFormSection').style.display = 'block';
-                document.getElementById('showLoginTabBtn').classList.add('active');
-                document.getElementById('showRegisterTabBtn').classList.remove('active');
-            }
-            function showRegisterTab() {
+            // Show register
+            document.getElementById('showRegisterBtn').addEventListener('click', () => {
                 document.getElementById('loginFormSection').style.display = 'none';
                 document.getElementById('registerFormSection').style.display = 'block';
-                document.getElementById('showRegisterTabBtn').classList.add('active');
-                document.getElementById('showLoginTabBtn').classList.remove('active');
-            }
-            document.getElementById('showLoginTabBtn').addEventListener('click', showLoginTab);
-            document.getElementById('showRegisterTabBtn').addEventListener('click', showRegisterTab);
-            document.getElementById('showRegisterBtn').addEventListener('click', showRegisterTab);
-            document.getElementById('showLoginBtn').addEventListener('click', showLoginTab);
+            });
+ 
+            // Show login
+            document.getElementById('showLoginBtn').addEventListener('click', () => {
+                document.getElementById('registerFormSection').style.display = 'none';
+                document.getElementById('loginFormSection').style.display = 'block';
+            });
  
             // Guest
             document.getElementById('guestLoginBtn').addEventListener('click', doGuestLogin);
