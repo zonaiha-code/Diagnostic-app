@@ -98,6 +98,23 @@ function authMiddleware(req, res, next) {
 
 app.get('/api/health', (req, res) => res.json({ status: 'OK', message: 'Server is running' }));
 
+// Verify a stored token is still valid & fetch fresh user info.
+// The frontend calls this on load instead of blindly trusting localStorage,
+// which is what previously let a stale/expired session appear "logged in".
+app.get('/api/users/verify', authMiddleware, async (req, res) => {
+    try {
+        const result = await db.execute({
+            sql: 'SELECT id, name, email FROM users WHERE id = ?',
+            args: [req.user.id]
+        });
+        const user = result.rows[0];
+        if (!user && req.user.id !== 0) return res.status(401).json({ error: 'User no longer exists' });
+        res.json({ user: user || { id: 0, name: 'Guest User', email: 'guest@diagnostic.com' } });
+    } catch {
+        res.status(500).json({ error: 'Verification failed' });
+    }
+});
+
 app.post('/api/users/register', async (req, res) => {
     try {
         const { name, email, password } = req.body;
