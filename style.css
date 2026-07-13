@@ -26,6 +26,27 @@ body {
     color: var(--text-primary);
     overflow-x: hidden;
     min-height: 100vh;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(79, 207, 79, 0.5) rgba(10, 15, 10, 0.4);
+}
+
+/* Custom themed scrollbar (replaces the default fat OS scrollbar) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(10, 15, 10, 0.4);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--gradient-start), var(--gradient-end));
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--glow-color);
 }
 
 .particles {
