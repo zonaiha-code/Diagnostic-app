@@ -1275,11 +1275,11 @@
         // INIT — APP (after login)
         // ============================================================
         async function init() {
+            setupNavigation();
+            setupMobileMenu();
             createParticles();
             await updateAllData();
             loadHistory();
-            setupNavigation();
-            setupMobileMenu();
             await loadDbStats();
  
             document.getElementById("refreshDashboard")?.addEventListener("click", async () => { await updateAllData(); showToast("Dashboard refreshed!"); });
