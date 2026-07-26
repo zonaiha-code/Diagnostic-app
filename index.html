@@ -1314,10 +1314,9 @@
             createParticles();
             await checkAPI();
  
-            // Auto-login ONLY if the stored token is still valid on the server.
-            // Previously this trusted localStorage blindly, which meant a stale
-            // or expired session could appear "logged in" without re-checking
-            // credentials — this now re-verifies with /api/users/verify first.
+            // Auto-login if a locally stored session exists. We re-verify with
+            // the server first; but a network hiccup or Vercel cold-start delay
+            // must NOT be treated the same as an explicit "token invalid" reply.
             if (authToken && currentUser) {
                 const verifyRes = await apiCall('/users/verify');
                 if (verifyRes && verifyRes.ok) {
@@ -1326,12 +1325,18 @@
                     localStorage.setItem('diag_user', JSON.stringify(currentUser));
                     enterApp();
                     return;
-                } else {
-                    // Token invalid/expired — clear it and fall through to show login screen
+                } else if (verifyRes && !verifyRes.ok) {
+                    // Server explicitly rejected the token (e.g. 401) — it really is invalid
                     authToken = null;
                     currentUser = null;
                     localStorage.removeItem('diag_token');
                     localStorage.removeItem('diag_user');
+                } else {
+                    // verifyRes is null — a network hiccup/cold-start, NOT proof the
+                    // session is invalid. Trust the locally stored session instead
+                    // of forcing the user back to the login screen.
+                    enterApp();
+                    return;
                 }
             }
  
