@@ -21,11 +21,6 @@
                 <p style="color:#8fca8f; font-size:0.85rem;">Ultimate Edition v4.0</p>
             </div>
 
-            <!-- API Status -->
-            <div id="loginApiStatus" style="text-align:center; font-size:12px; margin-bottom:20px; padding:6px 12px; border-radius:20px; background:rgba(0,0,0,0.4);">
-                <i class="fas fa-circle-notch fa-spin"></i> Connecting to server...
-            </div>
-
             <!-- Login Form -->
             <div id="loginFormSection">
                 <input type="email" id="loginEmail" placeholder="Email Address" style="width:100%;padding:12px 16px;margin:8px 0;background:rgba(0,0,0,0.4);border:1px solid rgba(79,207,79,0.3);border-radius:50px;color:#e0ffe0;outline:none;font-size:0.9rem;">
@@ -1312,34 +1307,14 @@
         // ============================================================
         async function boot() {
             createParticles();
-            await checkAPI();
- 
-            // Auto-login if a locally stored session exists. We re-verify with
-            // the server first; but a network hiccup or Vercel cold-start delay
-            // must NOT be treated the same as an explicit "token invalid" reply.
-            if (authToken && currentUser) {
-                const verifyRes = await apiCall('/users/verify');
-                if (verifyRes && verifyRes.ok) {
-                    const data = await verifyRes.json();
-                    currentUser = data.user;
-                    localStorage.setItem('diag_user', JSON.stringify(currentUser));
-                    enterApp();
-                    return;
-                } else if (verifyRes && !verifyRes.ok) {
-                    // Server explicitly rejected the token (e.g. 401) — it really is invalid
-                    authToken = null;
-                    currentUser = null;
-                    localStorage.removeItem('diag_token');
-                    localStorage.removeItem('diag_user');
-                } else {
-                    // verifyRes is null — a network hiccup/cold-start, NOT proof the
-                    // session is invalid. Trust the locally stored session instead
-                    // of forcing the user back to the login screen.
-                    enterApp();
-                    return;
-                }
-            }
- 
+
+            // Attach ALL login-screen listeners FIRST, before any awaited network
+            // call below. Previously these were attached only after checkAPI()
+            // and /users/verify finished — so on a slow connection or a Vercel
+            // cold-start delay, the login page was visible but its buttons did
+            // nothing until that request finally resolved (hence "stuck until
+            // refresh"). Now the form is always clickable immediately.
+
             // Login button
             document.getElementById('loginBtn').addEventListener('click', () => {
                 const email = document.getElementById('loginEmail').value.trim();
@@ -1390,6 +1365,44 @@
                     icon.classList.toggle('fa-eye-slash', show);
                 });
             });
+
+            // If a session is already stored locally, hide the login screen
+            // while we silently verify it — this avoids the brief "flash" of
+            // the login form right before switching over to the app.
+            const loginScreenEl = document.getElementById('loginScreen');
+            const hasStoredSession = !!(authToken && currentUser);
+            if (hasStoredSession && loginScreenEl) {
+                loginScreenEl.style.visibility = 'hidden';
+            }
+
+            checkAPI();
+ 
+            // Auto-login if a locally stored session exists. We re-verify with
+            // the server first; but a network hiccup or Vercel cold-start delay
+            // must NOT be treated the same as an explicit "token invalid" reply.
+            if (hasStoredSession) {
+                const verifyRes = await apiCall('/users/verify');
+                if (verifyRes && verifyRes.ok) {
+                    const data = await verifyRes.json();
+                    currentUser = data.user;
+                    localStorage.setItem('diag_user', JSON.stringify(currentUser));
+                    enterApp();
+                    return;
+                } else if (verifyRes && !verifyRes.ok) {
+                    // Server explicitly rejected the token (e.g. 401) — it really is invalid
+                    authToken = null;
+                    currentUser = null;
+                    localStorage.removeItem('diag_token');
+                    localStorage.removeItem('diag_user');
+                    if (loginScreenEl) loginScreenEl.style.visibility = 'visible';
+                } else {
+                    // verifyRes is null — a network hiccup/cold-start, NOT proof the
+                    // session is invalid. Trust the locally stored session instead
+                    // of forcing the user back to the login screen.
+                    enterApp();
+                    return;
+                }
+            }
         }
  
         boot();
