@@ -1182,3 +1182,35 @@ body {
     letter-spacing: 1px;
     color: var(--text-secondary);
 }
+/* Custom Scrollbar — same green-teal theme everywhere */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--gradient-end) var(--bg-card);
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
+    background: var(--bg-card);
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--gradient-start), var(--gradient-end));
+    border-radius: 10px;
+    border: 2px solid var(--bg-card);
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+    background: var(--glow-color);
+}
