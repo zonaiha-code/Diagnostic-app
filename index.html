@@ -1230,18 +1230,30 @@
         // ============================================================
         // NAVIGATION
         // ============================================================
+        function goToSection(sectionName) {
+            const navModule = document.querySelector(`#mobileMenu .nav-module[data-section="${sectionName}"]`);
+            const target = document.getElementById(sectionName);
+            if (!navModule || !target) return;
+            document.querySelectorAll("#mobileMenu .nav-module").forEach(x => x.classList.remove("active"));
+            navModule.classList.add("active");
+            document.querySelectorAll(".section").forEach(s => s.classList.remove("active-section"));
+            target.classList.add("active-section");
+            localStorage.setItem('diag_last_section', sectionName);
+        }
+
         function setupNavigation() {
             document.querySelectorAll("#mobileMenu .nav-module").forEach(m => {
                 m.addEventListener("click", () => {
-                    document.querySelectorAll("#mobileMenu .nav-module").forEach(x => x.classList.remove("active"));
-                    m.classList.add("active");
-                    document.querySelectorAll(".section").forEach(s => s.classList.remove("active-section"));
-                    const target = document.getElementById(m.getAttribute("data-section"));
-                    if (target) target.classList.add("active-section");
+                    goToSection(m.getAttribute("data-section"));
                     document.getElementById('mobileMenu')?.classList.remove('active');
                     document.getElementById('mobileOverlay')?.classList.remove('active');
                 });
             });
+
+            // Restore whichever section the user was on before refresh —
+            // otherwise the app always snaps back to Dashboard.
+            const lastSection = localStorage.getItem('diag_last_section');
+            if (lastSection) goToSection(lastSection);
         }
  
         function setupMobileMenu() {
