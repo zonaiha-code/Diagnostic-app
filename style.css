@@ -637,22 +637,3 @@ body {
     .desktop-nav { display: flex !important; }
     .mobile-menu-btn { display: none !important; }
 }
-
-/* Custom Scrollbar — matches Health Score ring gradient (teal → green → mint) */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--bg-card);
-}
-
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--gradient-start) 0%, var(--glow-color) 50%, #8fff8f 100%);
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, var(--glow-color) 0%, #8fff8f 50%, var(--text-primary) 100%);
-}
-
