@@ -464,13 +464,18 @@
             const headers = { 'Content-Type': 'application/json' };
             if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
             if (options.headers) Object.assign(headers, options.headers);
+            // These endpoints don't need an existing session — a 401 from them
+            // means "wrong credentials", not "your session expired". They must
+            // NOT trigger the auto-logout below, or a wrong password during
+            // login gets silently reinterpreted as a forced logout.
+            const noAutoLogoutEndpoints = ['/users/login', '/users/register', '/users/guest'];
             try {
                 const res = await fetch(`${API_BASE}/api${endpoint}`, {
                     method: options.method || 'GET',
                     headers,
                     body: options.body || undefined
                 });
-                if (res.status === 401) {
+                if (res.status === 401 && !noAutoLogoutEndpoints.includes(endpoint)) {
                     doLogout();
                     return null;
                 }
@@ -585,7 +590,11 @@
             localStorage.removeItem('diag_token');
             localStorage.removeItem('diag_user');
             document.getElementById('mainApp').style.display = 'none';
-            document.getElementById('loginScreen').style.display = 'flex';
+            const loginScreenEl = document.getElementById('loginScreen');
+            loginScreenEl.style.display = 'flex';
+            loginScreenEl.style.visibility = 'visible';
+            const overlayEl = document.getElementById('sessionCheckOverlay');
+            if (overlayEl) overlayEl.style.display = 'none';
             showToast('Logged out successfully');
         }
  
