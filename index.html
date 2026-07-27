@@ -11,6 +11,14 @@
     <div class="particles" id="particles"></div>
     <div class="glow-orb"></div>
     <div class="glow-orb glow-orb-2"></div>
+
+    <!-- ========== SESSION CHECK OVERLAY ========== -->
+    <div id="sessionCheckOverlay" style="display:none; align-items:center; justify-content:center; min-height:100vh; position:fixed; top:0; left:0; width:100%; z-index:10000; background:linear-gradient(135deg,#0a0f0a 0%,#020502 50%,#0a0f0a 100%);">
+        <div style="text-align:center; color:#8fca8f;">
+            <i class="fas fa-circle-notch fa-spin" style="font-size:2.5rem; color:#4fcf4f; margin-bottom:15px; display:block;"></i>
+            <p style="font-size:0.9rem;">Checking your session...</p>
+        </div>
+    </div>
  
     <!-- ========== LOGIN SCREEN ========== -->
     <div id="loginScreen" style="display:flex; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(135deg,#0a0f0a 0%,#020502 50%,#0a0f0a 100%); position:fixed; top:0; left:0; width:100%; z-index:9999; overflow-y:auto;">
@@ -28,6 +36,7 @@
                     <input type="password" id="loginPassword" placeholder="Password" style="width:100%;padding:12px 46px 12px 16px;margin:8px 0;background:rgba(0,0,0,0.4);border:1px solid rgba(79,207,79,0.3);border-radius:50px;color:#e0ffe0;outline:none;font-size:0.9rem;box-sizing:border-box;">
                     <i class="fas fa-eye toggle-password-icon" data-target="loginPassword" style="position:absolute;right:18px;top:50%;transform:translateY(-50%);color:#8fca8f;cursor:pointer;font-size:0.9rem;"></i>
                 </div>
+                <div id="loginErrorMsg" style="display:none; color:#ff6b6b; background:rgba(255,107,107,0.12); border:1px solid rgba(255,107,107,0.4); border-radius:12px; padding:8px 14px; margin:6px 0; font-size:0.8rem; text-align:center;"></div>
                 <button id="loginBtn" style="width:100%;padding:14px;margin-top:12px;background:linear-gradient(135deg,#27b095,#4CAF50);border:none;border-radius:50px;color:#0a0f0a;font-weight:700;font-size:1rem;cursor:pointer;letter-spacing:2px;">
                     <i class="fas fa-sign-in-alt"></i> LOGIN
                 </button>
@@ -502,8 +511,17 @@
         // ============================================================
         // AUTH FUNCTIONS
         // ============================================================
+        function showLoginError(msg) {
+            const el = document.getElementById('loginErrorMsg');
+            if (!el) return;
+            if (!msg) { el.style.display = 'none'; el.innerText = ''; return; }
+            el.innerText = msg;
+            el.style.display = 'block';
+        }
+
         async function doLogin(email, password) {
             const btn = document.getElementById('loginBtn');
+            showLoginError(null);
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> LOGGING IN...';
             btn.disabled = true;
             const res = await apiCall('/users/login', { method: 'POST', body: JSON.stringify({ email, password }) });
@@ -518,8 +536,10 @@
                 enterApp();
             } else if (res) {
                 const err = await res.json();
+                showLoginError(err.error || 'Login failed');
                 showToast(err.error || 'Login failed', true);
             } else {
+                showLoginError('Cannot connect to server. Please try again.');
                 showToast('Cannot connect to server. Is it running?', true);
             }
         }
@@ -571,6 +591,8 @@
  
         function enterApp() {
             document.getElementById('loginScreen').style.display = 'none';
+            const overlayEl = document.getElementById('sessionCheckOverlay');
+            if (overlayEl) overlayEl.style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
             if (currentUser) {
                 document.getElementById('userWelcome').innerHTML = `<i class="fas fa-user"></i> ${currentUser.name}`;
@@ -1378,13 +1400,16 @@
                 });
             });
 
-            // If a session is already stored locally, hide the login screen
-            // while we silently verify it — this avoids the brief "flash" of
-            // the login form right before switching over to the app.
+            // If a session is already stored locally, show a loading overlay
+            // while we silently verify it in the background — this avoids the
+            // brief "flash" of the login form, and (unlike before) never
+            // leaves the screen blank with nothing on it while it waits.
             const loginScreenEl = document.getElementById('loginScreen');
+            const sessionCheckOverlayEl = document.getElementById('sessionCheckOverlay');
             const hasStoredSession = !!(authToken && currentUser);
-            if (hasStoredSession && loginScreenEl) {
+            if (hasStoredSession && loginScreenEl && sessionCheckOverlayEl) {
                 loginScreenEl.style.visibility = 'hidden';
+                sessionCheckOverlayEl.style.display = 'flex';
             }
 
             checkAPI();
@@ -1406,6 +1431,7 @@
                     currentUser = null;
                     localStorage.removeItem('diag_token');
                     localStorage.removeItem('diag_user');
+                    if (sessionCheckOverlayEl) sessionCheckOverlayEl.style.display = 'none';
                     if (loginScreenEl) loginScreenEl.style.visibility = 'visible';
                 } else {
                     // verifyRes is null — a network hiccup/cold-start, NOT proof the
